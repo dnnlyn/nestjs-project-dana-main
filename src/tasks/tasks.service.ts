@@ -3,7 +3,6 @@
 import {
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Task } from './task.entity';
@@ -14,13 +13,15 @@ import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+// import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private readonly tasksRepository: Repository<Task>,
-    private logger = new Logger('tasksRepository'),
-  ) {}
+    // private jwtService: JwtService,
+  ) // private logger = new Logger('tasksRepository'),
+  {} 
 
   async getTasks(filterDto: GetTaskFilterDto, user: User): Promise<Task[]> {
     const { status, search } = filterDto;
@@ -43,12 +44,6 @@ export class TasksService {
       const tasks = await query.getMany();
       return tasks;
     } catch (error) {
-      this.logger.error(
-        `Failed to get tasks for user "${
-          user.username
-        }". Filters: ${JSON.stringify(filterDto)}`,
-        error.stack,
-      );
       throw new InternalServerErrorException();
     }
   }
