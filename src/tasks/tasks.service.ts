@@ -3,7 +3,7 @@
 import {
   Injectable,
   InternalServerErrorException,
-  Logger,
+  // Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Task } from './task.entity';
@@ -19,7 +19,7 @@ import { Repository } from 'typeorm';
 export class TasksService {
   constructor(
     @InjectRepository(Task) private readonly tasksRepository: Repository<Task>,
-    private logger = new Logger('tasksRepository'),
+    // private logger = new Logger('tasksRepository'),
   ) {}
 
   async getTasks(filterDto: GetTaskFilterDto, user: User): Promise<Task[]> {
@@ -43,12 +43,6 @@ export class TasksService {
       const tasks = await query.getMany();
       return tasks;
     } catch (error) {
-      this.logger.error(
-        `Failed to get tasks for user "${
-          user.username
-        }". Filters: ${JSON.stringify(filterDto)}`,
-        error.stack,
-      );
       throw new InternalServerErrorException();
     }
   }
